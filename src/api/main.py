@@ -9,9 +9,9 @@ from src.api.model import Usuario
 app = FastAPI()
 
 
-@app.get("/usuario")
+@app.get("/usuarios")
 def get_usuario():
-    return Usuario('teste', datetime.now())
+    return Usuario('teste', datetime(2020, 1, 12))
 
 
 if __name__ == "__main__":
