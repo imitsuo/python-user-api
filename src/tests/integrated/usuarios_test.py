@@ -124,13 +124,13 @@ class UsuariosTest(unittest.TestCase):
     def test_criar_usuario__novo_usuario__expected_criar_usuario(self):
         # FIXTURES
         _cpf = '55827901016'
-        _usuario = self.db.query(UsuarioModel).filter(UsuarioModel.cpf == _cpf).first()
-        if _usuario is not None:
-            q = delete(EnderecoModel).where(EnderecoModel.usuario_id == _usuario.id)
-            self.db.execute(q)
-
-            q = delete(UsuarioModel).where(UsuarioModel.id == _usuario.id)
-            self.db.execute(q)
+        # _usuario = self.db.query(UsuarioModel).filter(UsuarioModel.cpf == _cpf).first()
+        # if _usuario is not None:
+        #     q = delete(EnderecoModel).where(EnderecoModel.usuario_id == _usuario.id)
+        #     self.db.execute(q)
+        #
+        #     q = delete(UsuarioModel).where(UsuarioModel.id == _usuario.id)
+        #     self.db.execute(q)
 
         _payload = {
             'nome': 'teste 2',
@@ -215,4 +215,16 @@ class UsuariosTest(unittest.TestCase):
                 'usuario_id': _usuario.id
             }
         }
+
+    def test_deletar_usuario__usuario__expected_deletar_usuario(self):
+        # FIXTURES
+        _usuario, _endereco = self.criar_usuario_para_testes()
+
+        # EXERCISE
+        response = self.client.delete(f'/usuarios/{_usuario.id}')
+
+        # ASSERTS
+        assert response.status_code == 200
+        _usuario = self.db.query(UsuarioModel).filter(UsuarioModel.cpf == _usuario.cpf).first()
+        self.assertIsNone(_usuario)
 

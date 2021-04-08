@@ -2,6 +2,7 @@ import json
 import uvicorn
 from fastapi import FastAPI, Depends, Response
 from marshmallow import ValidationError
+from sqlalchemy import delete
 from sqlalchemy.orm import Session, joinedload
 from starlette import status
 
@@ -105,6 +106,20 @@ def atualizar_usuario(usuario_id: int, usuario: UsuarioSchema, db: Session = Dep
     _u = db.query(UsuarioModel).options(joinedload('endereco')).filter(UsuarioModel.id == usuario_id).first()
 
     return _u
+
+
+@app.delete("/usuarios/{usuario_id}", status_code=status.HTTP_200_OK)
+def deletar_usuario(usuario_id: int, db: Session = Depends(get_db)):
+    _usuario = db.query(UsuarioModel).options(joinedload('endereco')).filter(UsuarioModel.id == usuario_id).first()
+    if _usuario is None:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+    q = delete(EnderecoModel).where(EnderecoModel.usuario_id == _usuario.id)
+    db.execute(q)
+
+    q = delete(UsuarioModel).where(UsuarioModel.id == _usuario.id)
+    db.execute(q)
+    db.commit()
 
 
 if __name__ == "__main__":
