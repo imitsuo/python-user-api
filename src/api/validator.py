@@ -1,11 +1,14 @@
 import datetime
+import re
 
 from marshmallow import ValidationError, fields, Schema, validate, validates, post_load
-
-from src.api.model import Usuario, Endereco
+from src.api.model import UsuarioModel, EnderecoModel
 
 
 def _validate_cpf(value):
+    if not str.isdigit(value):
+        raise ValidationError("Cpf inválido.")
+
     cpf = [int(char) for char in value if char.isdigit()]
 
     if len(cpf) != 11:
@@ -21,6 +24,11 @@ def _validate_cpf(value):
             raise ValidationError("Cpf inválido.")
 
 
+def _validate_cep(value):
+    if re.match('\d{5}-\d{3}', value) is None:
+        raise ValidationError("Cep inválido.")
+
+
 class MyDateTimeField(fields.DateTime):
     def _deserialize(self, value, attr, data, **kwargs):
         if isinstance(value, datetime.datetime):
@@ -28,9 +36,7 @@ class MyDateTimeField(fields.DateTime):
         return super()._deserialize(value, attr, data)
 
 
-
-
-class EnderecoSchema(Schema):
+class EnderecoValidator(Schema):
     cep = fields.Str(required=True)
     rua = fields.Str(
         required=True,
@@ -58,12 +64,16 @@ class EnderecoSchema(Schema):
     )
     estado = fields.Str(required=True)
 
+    @validates("cep")
+    def validate_cep(self, value):
+        _validate_cep(value)
+
     @post_load
     def make_endereco(self, data: dict, **kwargs):
-        return Endereco(**data)
+        return EnderecoModel(**data)
 
 
-class UsuarioSchema(Schema):
+class UsuarioValidator(Schema):
     nome = fields.Str(
         required=True,
         validate=validate.Length(
@@ -74,7 +84,7 @@ class UsuarioSchema(Schema):
     )
     cpf = fields.Str(required=True)
     data_nascimento = fields.DateTime(required=True)
-    endereco = fields.Nested(EnderecoSchema(), required=True)
+    endereco = fields.Nested(EnderecoValidator(), required=True)
 
     @validates("cpf")
     def validate_cpf(self, value):
@@ -82,4 +92,4 @@ class UsuarioSchema(Schema):
 
     @post_load
     def make_usuario(self, data: dict, **kwargs):
-        return Usuario(**data)
+        return UsuarioModel(**data)

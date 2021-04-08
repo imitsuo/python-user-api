@@ -2,3 +2,7 @@ fastapi
 uvicorn
 sqlAlchemy
 requests
+marshmallow
+psycopg2-binary
+async-exit-stack
+async-generator
