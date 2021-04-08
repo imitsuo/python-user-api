@@ -31,8 +31,6 @@ class UsuariosTest(unittest.TestCase):
 
     def tearDown(self):
         pass
-        # Base.metadata.drop_all(bind=self.engine)
-        # Base.metadata.drop_all(bind=self.engine)
 
     def criar_usuario_para_testes(self):
         _cpf = '87535514600'
@@ -60,7 +58,6 @@ class UsuariosTest(unittest.TestCase):
         _endereco.usuario_id = _usuario.id
         self.db.add(_endereco)
         self.db.flush()
-        # self.db.commit()
 
         return _usuario, _endereco
 
@@ -124,13 +121,6 @@ class UsuariosTest(unittest.TestCase):
     def test_criar_usuario__novo_usuario__expected_criar_usuario(self):
         # FIXTURES
         _cpf = '55827901016'
-        # _usuario = self.db.query(UsuarioModel).filter(UsuarioModel.cpf == _cpf).first()
-        # if _usuario is not None:
-        #     q = delete(EnderecoModel).where(EnderecoModel.usuario_id == _usuario.id)
-        #     self.db.execute(q)
-        #
-        #     q = delete(UsuarioModel).where(UsuarioModel.id == _usuario.id)
-        #     self.db.execute(q)
 
         _payload = {
             'nome': 'teste 2',
