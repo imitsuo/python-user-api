@@ -40,5 +40,3 @@ class EnderecoModel(Base):
     estado = Column(String(2), nullable=True)
     usuario_id = Column(Integer, ForeignKey("usuario.id"))
 
-
-Base.metadata.create_all(bind=engine)

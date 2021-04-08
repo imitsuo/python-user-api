@@ -17,18 +17,21 @@ SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@localhost/postgres"
 
 
 class UsuariosTest(unittest.TestCase):
-    def setUp(self):
-        self.engine = create_engine(SQLALCHEMY_DATABASE_URL)
-        self.sessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
+    @classmethod
+    def setUpClass(cls):
+        cls.engine = create_engine(SQLALCHEMY_DATABASE_URL)
+        cls.sessionLocal = sessionmaker(autocommit=True, autoflush=False, bind=cls.engine)
+
+    def setUp(self):
+        self.db = self.sessionLocal()
+        self.client = TestClient(app)
         Base.metadata.drop_all(bind=self.engine)
         Base.metadata.create_all(bind=self.engine)
-        self.db = self.sessionLocal()
-
-        self.client = TestClient(app)
 
     def tearDown(self):
         pass
+        # Base.metadata.drop_all(bind=self.engine)
         # Base.metadata.drop_all(bind=self.engine)
 
     def criar_usuario_para_testes(self):
@@ -57,7 +60,7 @@ class UsuariosTest(unittest.TestCase):
         _endereco.usuario_id = _usuario.id
         self.db.add(_endereco)
         self.db.flush()
-        self.db.commit()
+        # self.db.commit()
 
         return _usuario, _endereco
 
@@ -66,7 +69,7 @@ class UsuariosTest(unittest.TestCase):
         _usuario, _endereco = self.criar_usuario_para_testes()
 
         # EXERCISE
-        response = self.client.get(f"/usuarios/{_usuario.id}")
+        response = self.client.get(f'/usuarios/{_usuario.id}')
 
         # ASSERTS
         assert response.status_code == 200
@@ -82,7 +85,7 @@ class UsuariosTest(unittest.TestCase):
                                                   'cidade': _endereco.cidade,
                                                   'id': _endereco.id,
                                                   'rua': _endereco.rua,
-                                                  'usuario_id': _endereco.id
+                                                  'usuario_id': _endereco.usuario_id
                                                 }
                                               }
 
@@ -91,7 +94,7 @@ class UsuariosTest(unittest.TestCase):
         _usuario, _endereco = self.criar_usuario_para_testes()
 
         # EXERCISE
-        response = self.client.get(f"/usuarios/?offset=0")
+        response = self.client.get(f'/usuarios/?offset=0')
 
         # ASSERTS
         assert response.status_code == 200
@@ -116,7 +119,7 @@ class UsuariosTest(unittest.TestCase):
                                                     }
                                                   }
                                          ]
-        }
+                                    }
 
     def test_criar_usuario__novo_usuario__expected_criar_usuario(self):
         # FIXTURES
@@ -164,4 +167,52 @@ class UsuariosTest(unittest.TestCase):
                          'usuario_id': _usuario.id
                        }
             }
+
+    def test_atualizar_usuario__usuario_cadastrado__expected_atualizar_usuario(self):
+        # FIXTURES
+        _usuario, _endereco = self.criar_usuario_para_testes()
+
+        _payload = {
+            'nome': 'teste aaaa',
+            'cpf': _usuario.cpf,
+            'data_nascimento': '2021-04-01T00:00:00',
+            'endereco': {
+                'cep': '08122-040',
+                'rua': 'bb c',
+                'bairro': 'aab',
+                'cidade': 'ssa',
+                'estado': 'SC'
+            }
+        }
+
+        # EXERCISE
+        response = self.client.put(f'/usuarios/{_usuario.id}', json=_payload)
+
+        # ASSERTS
+        assert response.status_code == 200
+        self.db.refresh(_usuario)
+
+        self.assertEqual('teste aaaa', _usuario.nome)
+        self.assertEqual(datetime(2021, 4, 1), _usuario.data_nascimento)
+        self.assertEqual('08122-040', _usuario.endereco.cep)
+        self.assertEqual('bb c', _usuario.endereco.rua)
+        self.assertEqual('aab', _usuario.endereco.bairro)
+        self.assertEqual('ssa', _usuario.endereco.cidade)
+        self.assertEqual('SC', _usuario.endereco.estado)
+
+        assert response.json() == {
+            'id': _usuario.id,
+            'nome': 'teste aaaa',
+            'cpf': _usuario.cpf,
+            'data_nascimento': '2021-04-01T00:00:00',
+            'endereco': {
+                'id': _usuario.endereco.id,
+                'cep': '08122-040',
+                'rua': 'bb c',
+                'bairro': 'aab',
+                'cidade': 'ssa',
+                'estado': 'SC',
+                'usuario_id': _usuario.id
+            }
+        }
 
