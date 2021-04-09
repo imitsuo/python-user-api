@@ -7,13 +7,15 @@ ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# Install dependencies:
-COPY api/requirements.txt .
-RUN pip install -r requirements.txt
+RUN mkdir app
 
-WORKDIR /api/
+# Install dependencies:
+COPY src/api/requirements.txt ./app
+RUN pip install -r /app/requirements.txt
+
+WORKDIR /app
 
 # Run the application:
-COPY ./api /api
+COPY src ./src
 EXPOSE 8000
-CMD ["python", "main.py"]
+CMD ["python", "./src/api/main.py"]

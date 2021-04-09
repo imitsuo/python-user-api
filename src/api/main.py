@@ -6,9 +6,9 @@ from sqlalchemy import delete
 from sqlalchemy.orm import Session, joinedload
 from starlette import status
 
-from src.api.database import SessionLocal, engine, Base
-from src.api.model import UsuarioSchema, UsuarioModel, EnderecoModel
-from src.api.validator import UsuarioValidator
+from database import SessionLocal, engine, Base
+from model import UsuarioSchema, UsuarioModel, EnderecoModel
+from validator import UsuarioValidator
 
 app = FastAPI()
 
@@ -123,5 +123,5 @@ def deletar_usuario(usuario_id: int, db: Session = Depends(get_db)):
 
 
 if __name__ == "__main__":
-    Base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=engine, checkfirst=True)
     uvicorn.run(app, host="0.0.0.0", port=8000)

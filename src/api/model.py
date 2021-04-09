@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic.main import BaseModel
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from src.api.database import Base, engine
+from database import Base, engine
 
 
 class EnderecoSchema(BaseModel):

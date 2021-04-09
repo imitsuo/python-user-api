@@ -5,6 +5,6 @@ app:
 
 database:
 	docker pull postgres:13
-	docker stop psql1 || true
-	docker rm psql1 || true
+	docker stop postgres-user-api || true
+	docker rm postgres-user-api || true
 	docker run --name postgres-user-api -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres

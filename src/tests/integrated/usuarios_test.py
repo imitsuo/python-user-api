@@ -3,15 +3,15 @@ from datetime import datetime
 from fastapi.testclient import TestClient
 import unittest
 
-from src.api.database import Base
-from src.api.main import app
+
+from database import Base
+from main import app
 
 
-from sqlalchemy import create_engine, MetaData, delete
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import sessionmaker
 
-from src.api.model import UsuarioModel, EnderecoModel
+from model import UsuarioModel, EnderecoModel
 
 SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@localhost/postgres"
 

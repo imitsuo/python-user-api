@@ -2,7 +2,7 @@ import datetime
 import re
 
 from marshmallow import ValidationError, fields, Schema, validate, validates, post_load
-from src.api.model import UsuarioModel, EnderecoModel
+from model import UsuarioModel, EnderecoModel
 
 
 def _validate_cpf(value):
