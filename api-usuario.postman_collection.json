@@ -1,0 +1,159 @@
+{
+	"info": {
+		"_postman_id": "d7d3b9e1-daf8-4509-8f9d-db6209dfc3fd",
+		"name": "api-usuario",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/usuarios",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/usuarios?offset=0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"usuarios"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/usuarios/ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/usuarios/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"usuarios",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/usuarios",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cpf\": \"55827901016\",\r\n    \"data_nascimento\": \"2021-04-08T08:24:29.132208\",\r\n    \"nome\": \"teste 2\",\r\n    \"id\": 2,\r\n    \"endereco\": {\r\n        \"cep\": \"08121-040\",\r\n        \"bairro\": \"aa\",\r\n        \"estado\": \"SP\",\r\n        \"usuario_id\": 2,\r\n        \"rua\": \"bb\",\r\n        \"id\": 3,\r\n        \"cidade\": \"ss\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/usuarios - Erro validação",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cpf\": \"558279010163\",\r\n    \"data_nascimento\": \"2021-04-08T08:24:29.132208\",\r\n    \"nome\": \"teste 2\",\r\n    \"id\": 2,\r\n    \"endereco\": {\r\n        \"cep\": \"08121-040\",\r\n        \"bairro\": \"aa\",\r\n        \"estado\": \"SP\",\r\n        \"usuario_id\": 2,\r\n        \"rua\": \"bb\",\r\n        \"id\": 3,\r\n        \"cidade\": \"ss\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/usuarios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/usuarios/1",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cpf\": \"83476268209\",\r\n    \"data_nascimento\": \"2021-04-02T01:00:00.000\",\r\n    \"nome\": \"teste 2\",\r\n    \"id\": 2,\r\n    \"endereco\": {\r\n        \"cep\": \"08121-040\",\r\n        \"bairro\": \"aa\",\r\n        \"estado\": \"SP\",\r\n        \"usuario_id\": 2,\r\n        \"rua\": \"bb\",\r\n        \"id\": 3,\r\n        \"cidade\": \"ss\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/usuarios/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"usuarios",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/usuarios/1",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/usuarios/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"usuarios",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
